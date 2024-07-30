@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Janela de Exibição</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>The Window Object</h1>
+<h2>The opener Property</h2>
+
+<p id="demo">Clique no botão para abrir uma nova janela que escreve "HELLO!" na janela de origem.</p>
+
+<textarea id="userText" placeholder="Escreva algo aqui..."></textarea>
+<input type="file" id="imageInput" accept="image/*">
+<input type="file" id="textInput" accept=".txt">
+<input type="file" id="folderInput" webkitdirectory directory multiple>
+<input type="text" id="loginPattern" placeholder="Digite o padrão de login...">
+<button onclick="openNewWindow()">Abrir Nova Janela</button>
+
+<script>
+function openNewWindow() {
+    const userText = document.getElementById("userText").value.trim();
+    const imageInput = document.getElementById("imageInput").files[0];
+    const textInput = document.getElementById("textInput").files[0];
+    const folderInput = document.getElementById("folderInput").files;
+    const loginPattern = document.getElementById("loginPattern").value.trim();
+
+    if (!userText && !imageInput && !textInput && folderInput.length === 0 && !loginPattern) {
+        alert("Por favor, insira algum texto, selecione um arquivo ou digite um padrão de login.");
+        return;
+    }
+
+    const newWindow = window.open("", "", "width=600,height=600");
+    newWindow.document.write(`
+        <p id='displayText'></p>
+        <img id='displayImage' style='max-width: 100%; height: auto;'>
+        <pre id='displayTextFile'></pre>
+        <ul id='displayFolderFiles'></ul>
+        <p id='displayLoginPattern'></p>
+        <button onclick='sendContent()'>Enviar Conteúdo</button>
+        <script>
+            function sendContent() {
+                const displayText = document.getElementById('displayText').textContent;
+                const displayImage = document.getElementById('displayImage').src;
+                const displayTextFile = document.getElementById('displayTextFile').textContent;
+                const displayFolderFiles = document.getElementById('displayFolderFiles').innerHTML;
+                const displayLoginPattern = document.getElementById('displayLoginPattern').textContent;
+
+                // Enviar conteúdo de volta para a janela de origem
+                const opener = window.opener;
+                opener.document.getElementById('demo').innerHTML = displayText;
+                if (displayImage) {
+                    opener.document.getElementById('demo').innerHTML += '<br><img src="' + displayImage + '" style="max-width: 100%; height: auto;">';
+                }
+                opener.document.getElementById('demo').innerHTML += '<br>' + displayTextFile;
+                opener.document.getElementById('demo').innerHTML += '<br>' + displayFolderFiles;
+                opener.document.getElementById('demo').innerHTML += '<br>' + displayLoginPattern;
+
+                window.close();
+            }
+
+            // Preencher os dados na nova janela
+            document.getElementById('displayText').textContent = '${userText}';
+            if ('${loginPattern}') {
+                document.getElementById('displayLoginPattern').textContent = 'Padrão de Login: ${loginPattern}';
+            }
+        <\/script>
+    `);
+
+    // Processar imagem
+    if (imageInput) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            newWindow.document.getElementById('displayImage').src = e.target.result;
+        };
+        reader.readAsDataURL(imageInput);
+    }
+
+    // Processar arquivo de texto
+    if (textInput) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            newWindow.document.getElementById('displayTextFile').textContent = e.target.result;
+        };
+        reader.readAsText(textInput);
+    }
+
+    // Processar arquivos da pasta
+    for (let i = 0; i < folderInput.length; i++) {
+        const li = document.createElement('li');
+        li.innerText = folderInput[i].name;
+        newWindow.document.getElementById('displayFolderFiles').appendChild(li);
+    }
+}
+</script>
+
+</body>
+</html>
+
+
