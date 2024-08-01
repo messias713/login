@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<h1>usuario==admin  passe==1234</h1>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" required>
+            <div class="error" id="usernameError"></div>
+        </div>
+        <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="password" id="password" required>
+            <div class="error" id="passwordError"></div>
+        </div>
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+
+        // Limpa mensagens de erro
+        document.getElementById('usernameError').textContent = '';
+        document.getElementById('passwordError').textContent = '';
+
+        // Coleta os valores dos campos
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        // Validação simples
+        let valid = true;
+
+        if (username === '') {
+            document.getElementById('usernameError').textContent = 'Por favor, insira seu usuário.';
+            valid = false;
+        }
+
+        if (password === '') {
+            document.getElementById('passwordError').textContent = 'Por favor, insira sua senha.';
+            valid = false;
+        }
+
+        // Se tudo estiver válido, você pode prosseguir com o login
+        if (valid) {
+            console.log('Usuário:', username);
+            console.log('Senha:', password);
+            alert('Login realizado com sucesso!'); // Aqui você pode redirecionar ou processar o login
+        }
+    });
+</script>
+
+</body>
+</html>
+
