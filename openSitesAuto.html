@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .site-frame {
+            width: 33.33%;
+            height: 100vh;
+            border: none;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<h1 style="color:pink;">Todos os sites num sitio só.</h1>
+<body>
+    <script>
+        const sites = [
+            "https://google.com",
+            "https://bing.com",
+            "https://yahoo.com",
+            "https://youtube.com", // YouTube
+            "https://nationalgeographic.com", // National Geographic
+            "https://imdb.com", // Site de filmes (IMDB)
+            "https://bbc.com/news", // Site de notícias (BBC News)
+            "https://khanacademy.org", // Site educativo para crianças (Khan Academy)
+            "https://codecademy.com", // Site ensinando programação (Codecademy)
+            "https://investopedia.com", // Site de informação financeira (Investopedia)
+            "https://www.slbenfica.pt/pt-pt/agora/btv", // Benfica TV
+            "https://sporttv.pt", // Sport TV
+            "https://rottentomatoes.com", // Site generalista para filmes (Rotten Tomatoes)
+            "https://nationalgeographic.com/animals", // Vida selvagem (National Geographic Animals)
+            "https://nasa.gov", // NASA
+            "https://quantamagazine.org", // Física quântica (Quanta Magazine)
+            "https://sites.google.com/view/manuelcegonha/home",//rede social mcegonha
+            "https://sites.google.com/view/criar-scripts-javascript-com-i/p%C3%A1gina-inicial/melhor-hack-pesquisa-web",//Email temporario
+            "https://livrosaartedoespirito.blogspot.com/" //Minha base dados site my
+        ];
+
+        // Função para abrir cada site em uma nova janela
+        function abrirJanela(url) {
+            window.open(url, '_blank', 'width=800,height=600');
+        }
+
+        // Criar iframes e botões dinamicamente
+        sites.forEach(site => {
+            // Criar iframe
+            const iframe = document.createElement('iframe');
+            iframe.className = 'site-frame';
+            iframe.src = site;
+            document.body.appendChild(iframe);
+
+            // Criar botão
+            const button = document.createElement('button');
+            button.innerText = `Abrir ${new URL(site).hostname}`;
+            button.onclick = () => abrirJanela(site);
+            document.body.appendChild(button);
+        });
+    </script>
+</body>
+</html>
