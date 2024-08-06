@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Criação de Tags HTML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="meu-container"></div>
+
+    <script>
+        // Criar um título h1
+        const titulo = document.createElement('h1');
+        titulo.textContent = 'Exemplo de Criação de Tags HTML';
+        document.getElementById('meu-container').appendChild(titulo);
+
+        // Criar uma imagem
+        const imagem = document.createElement('img');
+        imagem.src = 'https://via.placeholder.com/150'; // URL da imagem
+        imagem.alt = 'Imagem de exemplo';
+        document.getElementById('meu-container').appendChild(imagem);
+
+        // Criar um iframe
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.example.com'; // URL do iframe
+        iframe.width = '300';
+        iframe.height = '200';
+        document.getElementById('meu-container').appendChild(iframe);
+
+        // Criar um vídeo
+        const video = document.createElement('video');
+        video.controls = true;
+        const source = document.createElement('source');
+        source.src = 'https://www.w3schools.com/html/mov_bbb.mp4'; // URL do vídeo
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        document.getElementById('meu-container').appendChild(video);
+
+        // Criar múltiplos links (a)
+        for (let i = 1; i <= 3; i++) {
+            const link = document.createElement('a');
+            link.href = `https://www.example.com/page${i}`;
+            link.textContent = `Link para Página ${i}`;
+            link.target = '_blank'; // Abre em nova aba
+            document.getElementById('meu-container').appendChild(link);
+            document.getElementById('meu-container').appendChild(document.createElement('br')); // Quebra de linha
+        }
+
+        // Criar um elemento details
+        const detalhes = document.createElement('details');
+        const resumo = document.createElement('summary');
+        resumo.textContent = 'Clique para ver mais detalhes';
+        detalhes.appendChild(resumo);
+        const conteudoDetalhes = document.createElement('p');
+        conteudoDetalhes.textContent = 'Aqui estão mais informações sobre o assunto.';
+        detalhes.appendChild(conteudoDetalhes);
+        document.getElementById('meu-container').appendChild(detalhes);
+
+        // Criar um script (exemplo de script inline)
+        const script = document.createElement('script');
+        script.textContent = 'console.log("Script executado!");';
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>
