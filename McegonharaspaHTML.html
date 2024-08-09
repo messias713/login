@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carregador de Arquivos e Formulário de Raspagem</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cheerio/1.0.0-rc.10/cheerio.min.js"></script>
+  <script>
+    function carregarArquivo(event) {
+      const arquivo = event.target.files[0];
+      const leitor = new FileReader();
+
+      leitor.onload = function (evento) {
+        document.getElementById('conteudo-arquivo').textContent = evento.target.result;
+        document.getElementById('form-raspagem').style.display = 'block';
+
+        // Cria um link para download do arquivo
+        const blob = new Blob([evento.target.result], { type: arquivo.type });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = arquivo.name; 
+        link.click(); 
+        URL.revokeObjectURL(url); 
+      };
+
+      leitor.readAsText(arquivo);
+    }
+
+    function enviarForm(event) {
+      event.preventDefault();
+      const url = document.getElementById('url').value;
+      const seletores = document.getElementById('seletores').value;
+
+      // Faz a raspagem dos dados usando Cheerio
+      $.ajax({
+        url: url,
+        success: function(html) {
+          const $ = cheerio.load(html);
+          const dadosRaspados = [];
+
+          $(seletores).each(function() {
+            const valor = $(this).text().trim();
+            dadosRaspados.push(valor);
+          });
+
+          // Exibe os dados raspados (ou você pode exportar para um arquivo)
+          document.getElementById('dados-raspados').textContent = dadosRaspados.join(', ');
+        }
+      });
+    }
+
+    function verificarLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Aqui você deve implementar a lógica de autenticação real!
+      if (username === 'mcegonha' && password === '123456mc*') {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } else {
+        alert('Usuário ou senha inválidos.');
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="login-form">
+    <h1>Login</h1>
+    <form onsubmit="verificarLogin(event)">
+      <label for="username">mcegonha:</label>
+      <input type="text" id="username" name="username" required><br><br>
+      <label for="password">123456mc*:</label>
+      <input type="password" id="password" name="password" required><br><br>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <div id="content" style="display: none;">
+    <h1>Carregador de Arquivos e Formulário de Raspagem</h1>
+
+    <input type="file" id="arquivo" accept=".txt,.csv,.xlsx" onchange="carregarArquivo(event)">
+
+    <div id="conteudo-arquivo"></div>
+
+    <form id="form-raspagem" style="display: none;" onsubmit="enviarForm(event)">
+      <h2>Formulário de Raspagem</h2>
+      <label for="url">URL:</label>
+      <input type="url" id="url" name="url" required><br><br>
+      <label for="seletores">Seletores (CSS ou XPath):</label>
+      <textarea id="seletores" name="seletores" required></textarea><br><br>
+      <button type="submit">Raspar Dados</button>
+    </form>
+
+    <div id="dados-raspados"></div>
+  </div>
+</body>
+</html>
