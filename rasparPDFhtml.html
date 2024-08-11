@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Upload de Arquivos PDF e HTML</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+</head>
+<body>
+    <h1>Upload de Arquivos PDF e HTML</h1>
+    <input type="file" id="fileInput" accept=".pdf, .html" multiple>
+    <button onclick="lerArquivos()">Ler Arquivos</button>
+
+    <script>
+        async function lerArquivos() {
+            const input = document.getElementById('fileInput');
+            const arquivos = input.files;
+            let conteudoTotal = '';
+
+            for (let i = 0; i < arquivos.length; i++) {
+                const arquivo = arquivos[i];
+
+                if (arquivo.type === "application/pdf") {
+                    const arrayBuffer = await arquivo.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+
+                    for (let j = 1; j <= pdf.numPages; j++) {
+                        const pagina = await pdf.getPage(j);
+                        const texto = await pagina.getTextContent();
+                        const textoUnido = texto.items.map(item => item.str).join(' ');
+                        conteudoTotal += `<h2>Conteúdo do arquivo PDF ${arquivo.name}, Página ${j}:</h2><p>${textoUnido}</p>`;
+                    }
+                } else if (arquivo.type === "text/html") {
+                    const leitor = new FileReader();
+                    leitor.onload = function(event) {
+                        conteudoTotal += `<h2>Conteúdo do arquivo HTML ${arquivo.name}:</h2><div>${event.target.result}</div>`;
+                        // Exibe o conteúdo total após ler todos os arquivos
+                        if (i === arquivos.length - 1) {
+                            abrirNovaJanela(conteudoTotal);
+                        }
+                    };
+                    leitor.readAsText(arquivo);
+                    continue; // Pula para o próximo arquivo
+                }
+            }
+
+            // Exibe o conteúdo total após ler todos os arquivos
+            if (conteudoTotal) {
+                abrirNovaJanela(conteudoTotal);
+            }
+        }
+
+        function abrirNovaJanela(conteudo) {
+            const novaJanela = window.open('', '_blank');
+            novaJanela.document.write('<html><head><title>Conteúdo dos Arquivos</title></head><body>');
+            novaJanela.document.write(conteudo);
+            novaJanela.document.write('</body></html>');
+            novaJanela.document.close();
+        }
+    </script>
+</body>
+</html>
