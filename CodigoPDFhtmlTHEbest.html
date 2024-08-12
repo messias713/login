@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Upload de Arquivos PDF e HTML</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link para um arquivo CSS externo -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+</head>
+<body>
+    <h1>Upload de Arquivos PDF e HTML</h1>
+    <input type="file" id="fileInput" accept=".pdf, .html" multiple>
+    <button onclick="lerArquivos()">Ler Arquivos</button>
+    <div id="loading" style="display:none;">Carregando...</div> <!-- Indicador de carregamento -->
+
+    <!-- Caixa de pesquisa -->
+    <input type="text" id="searchInput" placeholder="Pesquisar conteúdo...">
+    <button onclick="pesquisarConteudo()">Pesquisar</button>
+    <div id="searchResults"></div> <!-- Resultados da pesquisa -->
+
+    <script>
+        let conteudoTotal = '';
+
+        async function lerArquivos() {
+            const input = document.getElementById('fileInput');
+            const arquivos = input.files;
+            conteudoTotal = ''; // Limpa o conteúdo total antes de ler novos arquivos
+            document.getElementById('loading').style.display = 'block'; // Exibe o carregamento
+
+            for (let i = 0; i < arquivos.length; i++) {
+                const arquivo = arquivos[i];
+
+                if (arquivo.type === "application/pdf") {
+                    const arrayBuffer = await arquivo.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+
+                    for (let j = 1; j <= pdf.numPages; j++) {
+                        const pagina = await pdf.getPage(j);
+                        const texto = await pagina.getTextContent();
+                        const textoUnido = texto.items.map(item => item.str).join(' ');
+                        conteudoTotal += `<h2>Conteúdo do arquivo PDF ${arquivo.name}, Página ${j}:</h2><p>${textoUnido}</p>`;
+                    }
+                } else if (arquivo.type === "text/html") {
+                    const leitor = new FileReader();
+                    leitor.onload = function(event) {
+                        conteudoTotal += `<h2>Conteúdo do arquivo HTML ${arquivo.name}:</h2><div>${event.target.result}</div>`;
+                        if (i === arquivos.length - 1) {
+                            abrirNovaJanela(conteudoTotal);
+                        }
+                    };
+                    leitor.readAsText(arquivo);
+                    continue;
+                }
+            }
+
+            document.getElementById('loading').style.display = 'none'; // Oculta o carregamento
+            if (conteudoTotal) {
+                abrirNovaJanela(conteudoTotal);
+            }
+        }
+
+        function abrirNovaJanela(conteudo) {
+            const novaJanela = window.open('', '_blank');
+            novaJanela.document.write('<html><head><title>Conteúdo dos Arquivos</title></head><body>');
+            novaJanela.document.write(conteudo);
+            novaJanela.document.write('</body></html>');
+            novaJanela.document.close();
+        }
+
+        function pesquisarConteudo() {
+            const termoPesquisa = document.getElementById('searchInput').value.toLowerCase();
+            const resultados = conteudoTotal.toLowerCase().includes(termoPesquisa) ? conteudoTotal : 'Nenhum resultado encontrado.';
+            document.getElementById('searchResults').innerHTML = resultados;
+        }
+    </script>
+</body>
+</html>
