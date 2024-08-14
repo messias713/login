@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa JavaScript</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link para um arquivo CSS externo -->
+    <style>
+        /* Estilos para a barra de tarefas */
+        .barra-tarefas {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .barra-tarefas a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Criar a barra de tarefas -->
+    <div class="barra-tarefas">
+        <a href="#home">Início</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+    </div>
+
+    <script>
+        // Criar uma div
+        const div = document.createElement('div');
+        div.style.textAlign = 'center';
+        document.body.appendChild(div);
+
+        // Criar um h1
+        const h1 = document.createElement('h1');
+        h1.textContent = 'Bem-vindo ao meu programa!';
+        div.appendChild(h1);
+
+        // Criar uma imagem
+        const img = document.createElement('img');
+        img.src = 'https://img.freepik.com/fotos-premium/retrato-de-uma-menina-de-7-anos_116407-699.jpg'; // URL da imagem
+        img.alt = 'Imagem de exemplo';
+        div.appendChild(img);
+
+        // Criar um parágrafo para a frase "Seja feliz"
+        const fraseFeliz = document.createElement('p');
+        fraseFeliz.textContent = 'Seja feliz';
+        fraseFeliz.style.color = 'blue'; // Definindo a cor azul
+        div.appendChild(fraseFeliz);
+
+        // Criar elementos para exibir os resultados
+        const resultadoSoma = document.createElement('p');
+        const resultadoDerivada = document.createElement('p');
+        div.appendChild(resultadoSoma);
+        div.appendChild(resultadoDerivada);
+
+        // Função para calcular a soma
+        function calcularSoma() {
+            resultadoSoma.textContent = 'Resultado da soma (2 + 2): ' + (2 + 2);
+        }
+
+        // Função para calcular a derivada
+        function derivados() {
+            const f = (x) => x * x; // Função f(x) = x^2
+            const df = (x) => 2 * x; // Derivada f'(x) = 2x
+            const x = 3; // Valor em que queremos calcular a derivada
+            resultadoDerivada.textContent = 'A derivada de f(x) = x² em x = ' + x + ' é: ' + df(x);
+        }
+
+        // Chamar as funções ao carregar a página
+        window.onload = function() {
+            calcularSoma();
+            derivados();
+        };
+    </script>
+</body>
+</html>
